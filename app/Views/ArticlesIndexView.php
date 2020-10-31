@@ -1,3 +1,9 @@
+<?php if (isset($_SESSION['auth_id'])): ?>
+    <form method="post" action="/logout">
+        <button type="submit">Logout</button>
+    </form>
+<?php endif; ?>
+
 <h1>Articles</h1>
 
 <?php foreach ($articles as $article): ?>

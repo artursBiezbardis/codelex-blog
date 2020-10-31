@@ -6,10 +6,11 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 require_once 'vendor/autoload.php';
 
+session_start();
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// TODO Make this look better
 function database(): Connection
 {
     $connectionParams = [
@@ -41,6 +42,13 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('DELETE', '/articles/{id}', $namespace . 'ArticlesController@delete');
 
     $r->addRoute('POST', '/articles/{id}/comments', $namespace . 'CommentsController@store');
+
+    $r->addRoute('GET', '/register', $namespace . 'RegisterController@showRegistrationForm');
+    $r->addRoute('POST', '/register', $namespace . 'RegisterController@register');
+
+    $r->addRoute('GET', '/login', $namespace . 'LoginController@showLoginForm');
+    $r->addRoute('POST', '/login', $namespace . 'LoginController@login');
+    $r->addRoute('POST', '/logout', $namespace . 'LoginController@logout');
 });
 
 // Fetch method and URI from somewhere
