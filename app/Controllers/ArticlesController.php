@@ -4,6 +4,10 @@ namespace App\Controllers;
 
 use App\Models\Article;
 use App\Models\Comment;
+use App\Services\ArticlesServices\ArticlesIndexService;
+use App\Services\ArticlesServices\ArticleService;
+use App\Services\ArticlesServices\DeleteArticleService;
+use App\Services\CommentServices\ArticleCommentsService;
 
 class ArticlesController
 {
@@ -11,51 +15,26 @@ class ArticlesController
 
     public function index()
     {
-        $articlesQuery = query()
-            ->select('*')
-            ->from('articles')
-            ->orderBy('created_at', 'desc')
-            ->execute()
-            ->fetchAllAssociative();
-
+        $articlesQuery = new ArticlesIndexService();
         $articles = [];
-
-        foreach ($articlesQuery as $article)
-        {
+        foreach ($articlesQuery->executeService() as $article) {
             $articles[] = new Article(
-                (int) $article['id'],
+                (int)$article['id'],
                 $article['title'],
                 $article['content'],
                 $article['created_at']
             );
         }
-
-        return require_once __DIR__  . '/../Views/ArticlesIndexView.php';
+        return require_once __DIR__ . '/../Views/ArticlesIndexView.php';
     }
 
     public function show(array $vars)
     {
-        $articleQuery = query()
-            ->select('*')
-            ->from('articles')
-            ->where('id = :id')
-            ->setParameter('id', (int) $vars['id'])
-            ->execute()
-            ->fetchAssociative();
 
-        $commentsQuery = query()
-            ->select('*')
-            ->from('comments')
-            ->where('article_id = :articleId')
-            ->setParameter('articleId', (int) $vars['id'])
-            ->orderBy('created_at', 'desc')
-            ->execute()
-            ->fetchAllAssociative();
-
+        $commentsQuery = new ArticleCommentsService();
         $comments = [];
 
-        foreach ($commentsQuery as $comment)
-        {
+        foreach ($commentsQuery->executeService((int)$vars['id']) as $comment) {
             $comments[] = new Comment(
                 $comment['id'],
                 $comment['article_id'],
@@ -64,25 +43,23 @@ class ArticlesController
                 $comment['created_at'],
             );
         }
-
+        $articleClass = new ArticleService();
+        $articleQuery = $articleClass->executeService($vars['id']);
         $article = new Article(
-            (int) $articleQuery['id'],
+            (int)$articleQuery['id'],
             $articleQuery['title'],
             $articleQuery['content'],
             $articleQuery['created_at'],
         );
 
-        return require_once __DIR__  . '/../Views/ArticlesShowView.php';
+        return require_once __DIR__ . '/../Views/ArticlesShowView.php';
     }
 
-    public function delete(array $vars)
+    public function delete(array $vars): void
     {
-        query()
-            ->delete('articles')
-            ->where('id = :id')
-            ->setParameter('id', (int) $vars['id'])
-            ->execute();
+        (new DeleteArticleService())->executeService($vars['id']);
 
-        header('Location: /articles/');
+        header('Location: /');
     }
+
 }

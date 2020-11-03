@@ -1,4 +1,7 @@
 <a href="/">Back</a>
+<form method="get" action="/register">
+    <button type="submit">Registration</button>
+</form>
 <form method="post" action="/login">
     <div>
         <label for="email">E-Mail</label>

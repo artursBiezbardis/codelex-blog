@@ -32,7 +32,7 @@ function query(): QueryBuilder
     return database()->createQueryBuilder();
 }
 
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
+$dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $namespace = '\App\Controllers\\';
 
     $r->addRoute('GET', '/', $namespace . 'ArticlesController@index');
@@ -41,7 +41,11 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/articles/{id}', $namespace . 'ArticlesController@show');
     $r->addRoute('DELETE', '/articles/{id}', $namespace . 'ArticlesController@delete');
 
+    $r->addRoute('GET', '/add', $namespace . 'AddArticleController@showAddArticleForm');
+    $r->addRoute('POST', '/add', $namespace . 'AddArticleController@add');
+
     $r->addRoute('POST', '/articles/{id}/comments', $namespace . 'CommentsController@store');
+
 
     $r->addRoute('GET', '/register', $namespace . 'RegisterController@showRegistrationForm');
     $r->addRoute('POST', '/register', $namespace . 'RegisterController@register');

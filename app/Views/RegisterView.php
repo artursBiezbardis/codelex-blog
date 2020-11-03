@@ -1,4 +1,11 @@
 <a href="/">Back</a>
+<form method="get" action="/register">
+    <div>
+        <label for="email">E-Mail referral</label>
+        <input type="email" id="email" name="r" required/>
+    </div>
+</form>
+
 <form method="post" action="/register<?php echo $referral ? '?r=' . $referral : null; ?>">
     <div>
         <label for="name">Name</label>
@@ -20,10 +27,11 @@
         <input type="password" id="password_confirmation" name="password_confirmation" required/>
     </div>
 
-    <?php if($user): ?>
-    <div>
-        <strong>Referred by: <?php echo $user['name']; ?></strong>
-    </div>
+
+    <?php if ($user): ?>
+        <div>
+            <strong>Referred by: <?php echo $user['name']; ?></strong>
+        </div>
     <?php endif; ?>
 
     <button type="submit">Register</button>

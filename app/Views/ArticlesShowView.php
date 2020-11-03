@@ -6,8 +6,8 @@
         <b><?php echo $article->createdAt(); ?></b>
     </small>
 </p>
-<hr />
-    <?php if (! empty($comments)): ?>
+<hr/>
+<?php if (!empty($comments)): ?>
     <ul>
         <?php foreach ($comments as $comment): ?>
             <li>
@@ -16,14 +16,14 @@
             </li>
         <?php endforeach; ?>
     </ul>
-    <?php else: ?>
-        <strong>No comments.</strong>
-    <?php endif; ?>
-<hr />
+<?php else: ?>
+    <strong>No comments.</strong>
+<?php endif; ?>
+<hr/>
 <form method="post" action="/articles/<?php echo $article->id(); ?>/comments">
     <div>
         <label for="name">Name</label>
-        <input type="text" name="name" id="name" style="display:block;" />
+        <input type="text" name="name" id="name" style="display:block;"/>
     </div>
 
     <div>

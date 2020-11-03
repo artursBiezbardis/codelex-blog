@@ -9,8 +9,7 @@ class RegisterController
 {
     public function __construct()
     {
-        if (isset($_SESSION['auth_id']))
-        {
+        if (isset($_SESSION['auth_id'])) {
             header('Location: /');
         }
     }
@@ -18,6 +17,10 @@ class RegisterController
     public function showRegistrationForm()
     {
         $referral = $_GET['r'] ?? null;
+        if ($referral !== null) {
+            $_SERVER['QUERY_STRING'] = MD5($_GET['r']);
+
+        }
 
         $user = query()
             ->select('*')
@@ -27,8 +30,9 @@ class RegisterController
             ->execute()
             ->fetchAssociative();
 
-        return require_once __DIR__  . '/../Views/RegisterView.php';
+        return require_once __DIR__ . '/../Views/RegisterView.php';
     }
+
 
     public function register()
     {
@@ -36,8 +40,7 @@ class RegisterController
         $validName = $_POST['name'] !== '';
         $validPassword = $_POST['password'] !== '' && $_POST['password_confirmation'] === $_POST['password'];
 
-        if ($validEmail && $validName && $validPassword)
-        {
+        if ($validEmail && $validName && $validPassword) {
             $referredBy = query()
                 ->select('*')
                 ->from('users')
@@ -49,7 +52,7 @@ class RegisterController
             $data = $_POST;
 
             if ($referredBy) {
-                $data['referred_by'] = (int) $referredBy['id'];
+                $data['referred_by'] = (int)$referredBy['id'];
             }
 
             $user = User::create($data);
@@ -65,7 +68,7 @@ class RegisterController
                 ->setParameters($user->toArray())
                 ->execute();
 
-            $_SESSION['auth_id'] = (int) $query->getConnection()->lastInsertId();
+            $_SESSION['auth_id'] = (int)$query->getConnection()->lastInsertId();
 
             return header('Location: /');
         }

@@ -6,15 +6,14 @@ class LoginController
 {
     public function __construct()
     {
-        if (isset($_SESSION['auth_id']))
-        {
+        if (isset($_SESSION['auth_id'])) {
             header('Location: /');
         }
     }
 
     public function showLoginForm()
     {
-        return require_once __DIR__  . '/../Views/LoginView.php';
+        return require_once __DIR__ . '/../Views/LoginView.php';
     }
 
     public function login()
@@ -27,12 +26,12 @@ class LoginController
             ->execute()
             ->fetchAssociative();
 
-        if (! $user || ! password_verify($_POST['password'], $user['password'])) {
+        if (!$user || !password_verify($_POST['password'], $user['password'])) {
             // Show errors
             return header('Location: /login');
         }
 
-        $_SESSION['auth_id'] = (int) $user['id'];
+        $_SESSION['auth_id'] = (int)$user['id'];
 
         return header('Location: /');
     }

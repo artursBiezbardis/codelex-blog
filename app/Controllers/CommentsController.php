@@ -2,25 +2,15 @@
 
 namespace App\Controllers;
 
+
+use App\Services\CommentServices\StoreCommentsService;
+
 class CommentsController
 {
     public function store(array $vars)
     {
-        $articleId = (int) $vars['id'];
-
-        query()
-            ->insert('comments')
-            ->values([
-                'article_id' => ':articleId',
-                'name' => ':name',
-                'content' => ':content'
-            ])
-            ->setParameters([
-                'articleId' => $articleId,
-                'name' => $_POST['name'],
-                'content' => $_POST['content'],
-            ])
-            ->execute();
+        $articleId = (int)$vars['id'];
+        (new StoreCommentsService())->executeService($articleId);
 
         header('Location: /articles/' . $articleId);
     }
